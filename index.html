@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="styles/newspaper.css">
+        <script
+			  src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script>
+        <script src="jaliswall.js"></script>
+        <title>Newspaper.js ☕</title>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+    <div class="head">
+        <div class="headerobjectswrapper">
+            <!-- <div class="weatherforcastbox"><span style="font-style: italic;">Weatherforcast for the next 24 hours: Plenty of Sunshine</span><br><span>Wind: 7km/h SSE; Ther: 21°C; Hum: 82%</span></div> -->
+            <header>NewsPaper.JS ☕</header>
+        </div>
+        <div class="subhead"></div>
+    </div>
+    <div class="wall">
+      <!-- Content Generate with Ajax Request -->
+    </div>
+    <div class="greatings">
+      <!-- Greating content-->
+      <h2>Go coding now !   </h2>
+    </div>
+    </body>
+    <script>
+        function parseFeeds(feeds){
+            feeds.map(feed => $.ajax(feed.url, {
+                accepts:{
+                    xml:"application/rss+xml"
+                },
+                dataType:"xml",
+                success:function(data) {
+                    //Credit: http://stackoverflow.com/questions/10943544/how-to-parse-an-rss-feed-using-javascript
+
+                    $(data).find("item").each(function () { // or "item" or whatever suits your feed
+                        let el = $(this);
+                        if(el.find("title") !== ""){
+                            let newArticleImage = document.createElement('img');
+                            newArticleImage.style.maxWidth = "10%";
+                            newArticleImage.src = (el.find("enclosure").attr('url'))?el.find("enclosure").attr('url'):feed.image;
+                            
+                            let newArticleHeader =  document.createElement("a");
+                            newArticleHeader.href = "test.com";
+                            let newArticleHeaderText = document.createElement("h2");
+                            newArticleHeader.appendChild(newArticleImage);
+                            newArticleHeaderText.innerHTML += " " + el.find("title").text();
+                            // newArticleHeader.innerHTML += '<span class="headline hl7">'+el.find("pubDate").text();+'</span>'
+                            newArticleHeader.appendChild(newArticleHeaderText);
+
+                             let newArticleContent = document.createElement('p');
+                            newArticleContent.innerHTML = el.find('description').text();
+                            
+                            let newArticle = document.createElement("div");
+                            newArticle.className += "wall-item";
+                            newArticle.appendChild(newArticleHeader);
+                            newArticle.appendChild(newArticleContent);
+
+                        
+                            $(".wall").append(newArticle);
+                        }
+
+                    });
+                    $('.wall').jaliswall({item:'.wall-item'});
+            
+                }	
+            }));
+        }
+
+        $(document).ready(function() {
+            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            var today = new Date().toLocaleDateString("en-US", options);
+            $(".subhead").text("RSS news - "+today+" - Good read");
+            //feed to parse
+            var feeds =  [
+                {url:"http://developpez.com/rss.php", image: "test-dev"}, 
+                // {url:"https://hnrss.org/newest", image: "https://news.ycombinator.com/y18.gif"}
+            ];
+            parseFeeds(feeds);
+            setInterval(parseFeeds, 6000, [feeds])
+            
+        });
+    </script>
+</html>
