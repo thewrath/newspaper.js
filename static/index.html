@@ -29,17 +29,40 @@
     </div>
     </body>
     <script>
+        /**
+         * Shuffles array in place. ES6 version
+         * @param {Array} a items An array containing the items.
+         */
+        function shuffle(a) {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        /**
+         * Fetch feeds from certified origin 
+         * @param {Array} a items An array containing the items.
+         */
         function parseFeeds(feeds){
-            feeds.map(feed => $.ajax(feed.url, {
+            //get RSS from a certified origin 
+            var certified_url = "http://localhost:3000/get_rss/";
+            var items = new Array();
+            $(".wall").html("");
+            feeds.map(feed => $.ajax(certified_url + encodeURIComponent(feed.url), {
                 accepts:{
                     xml:"application/rss+xml"
                 },
                 dataType:"xml",
                 success:function(data) {
                     //Credit: http://stackoverflow.com/questions/10943544/how-to-parse-an-rss-feed-using-javascript
-
                     $(data).find("item").each(function () { // or "item" or whatever suits your feed
-                        let el = $(this);
+                        items.push($(this));
+                    });
+                    items = shuffle(items);
+                    items.forEach(i => {
+                        let el = i;
                         if(el.find("title") !== ""){
                             let newArticleImage = document.createElement('img');
                             newArticleImage.style.maxWidth = "10%";
@@ -53,7 +76,7 @@
                             // newArticleHeader.innerHTML += '<span class="headline hl7">'+el.find("pubDate").text();+'</span>'
                             newArticleHeader.appendChild(newArticleHeaderText);
 
-                             let newArticleContent = document.createElement('p');
+                                let newArticleContent = document.createElement('p');
                             newArticleContent.innerHTML = el.find('description').text();
                             
                             let newArticle = document.createElement("div");
@@ -61,15 +84,17 @@
                             newArticle.appendChild(newArticleHeader);
                             newArticle.appendChild(newArticleContent);
 
-                        
                             $(".wall").append(newArticle);
                         }
-
                     });
                     $('.wall').jaliswall({item:'.wall-item'});
             
+                },
+                error: function(data){
+                    console.log(certified_url + encodeURIComponent(feed.url));
                 }	
             }));
+            
         }
 
         $(document).ready(function() {
@@ -79,10 +104,11 @@
             //feed to parse
             var feeds =  [
                 {url:"http://developpez.com/rss.php", image: "test-dev"}, 
-                // {url:"https://hnrss.org/newest", image: "https://news.ycombinator.com/y18.gif"}
+                {url:"https://www.01net.com/rss/actualites/technos/", image: "https://static.bfmtv.com/ressourDces/img/logo/logo-01net-gris.png"},
+                {url:"https://korben.info/feed", image: ""}
             ];
             parseFeeds(feeds);
-            setInterval(parseFeeds, 6000, [feeds])
+            setInterval(function(){parseFeeds(feeds)}, 600000);
             
         });
     </script>
