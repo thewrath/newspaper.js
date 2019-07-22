@@ -1,7 +1,8 @@
-# Welcome to newspaper.js 👋
+# Welcome to newspaper.js ☕
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 
-> A simple node server to access RSS feed
+> Digital newspaper to read your favorite RSS feeds 
+> Front code need to be enchanced with better async but it work 
 
 ## Install
 

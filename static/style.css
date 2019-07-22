@@ -122,7 +122,7 @@ p{
 
 .wall-item > img {
   display: block;
-  width: 100%;
+  max-width: 5%;
   margin: 0 0 24px 0;
 }
 

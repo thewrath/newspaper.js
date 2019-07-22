@@ -1,10 +1,11 @@
 {
   "name": "newspaper.js-server",
-  "version": "1.0.0",
-  "description": "A simple node server to access RSS feed",
+  "version": "0.5.0",
+  "description": "Digital newspaper to read your favorite RSS feed",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server:start" : "nodemon main.js"
   },
   "author": "thewrath",
   "license": "ISC",
