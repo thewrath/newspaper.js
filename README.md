@@ -16,6 +16,9 @@ npm install
 npm run test
 ```
 
+## TODO
+ - Add scrollbar to item contents  
+
 ## Author
 
 👤 **thewrath**
