@@ -17,7 +17,10 @@ npm run test
 ```
 
 ## TODO
- - Add scrollbar to item contents  
+ - Add env file to get configuration of dev env and prod env
+ - Optimize RSS feed loading and wall generation (frontend part)
+ - Add posibility to add feed via GUI 
+ - Add deployer or capistrano   
 
 ## Author
 
